@@ -1,0 +1,75 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strtrim.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zsid-ele <zsid-ele@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/24 07:37:36 by zsid-ele          #+#    #+#             */
+/*   Updated: 2025/09/02 18:39:09 by zsid-ele         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
+
+static int	found_in_set(char c, char const *set)
+{
+	int	i;
+
+	i = -1;
+	while (set[++i] != '\0')
+	{
+		if (c == set[i])
+			return (1);
+	}
+	return (0);
+}
+
+static int	get_length(char const *s1, char const *set)
+{
+	int		i;
+	int		len;
+
+	i = -1;
+	len = 0;
+	while (s1[++i] != '\0')
+		len++;
+	while (found_in_set(s1[--i], set) == 1)
+	{
+		len--;
+		if (len == 0)
+			return (0);
+	}
+	while (found_in_set(*s1, set) == 1)
+	{
+		len--;
+		s1++;
+	}
+	return (len);
+}
+
+char	*ft_strtrim(char const *s1, char const *set)
+{
+	char	*ret;
+	int		i;
+	int		j;
+	int		len;
+
+	if (s1 == NULL)
+		return (NULL);
+	len = get_length(s1, set);
+	ret = ft_calloc(len + 1, 1);
+	if (ret == NULL)
+		return (NULL);
+	if (len == 0)
+		return (ret);
+	i = ft_strlen(s1) - 1;
+	while (found_in_set(s1[i], set) == 1)
+		i--;
+	j = 0;
+	while (found_in_set(s1[j], set) == 1)
+		j++;
+	while (i >= j)
+		ret[--len] = s1[i--];
+	return (ret);
+}
